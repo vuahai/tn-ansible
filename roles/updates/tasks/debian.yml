@@ -1,0 +1,9 @@
+---
+
+- name: apt update && apt dist-upgrade
+  apt:
+    upgrade: dist
+    update_cache: true
+    cache_valid_time: 3600
+    autoremove: true
+    state: latest

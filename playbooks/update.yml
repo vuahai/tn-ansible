@@ -1,0 +1,11 @@
+---
+
+- hosts: all
+
+  tasks:
+  - name: Set timezone to America/Los_Angeles
+    community.general.timezone:
+      name: America/Los_Angeles
+
+  roles:
+    - updates

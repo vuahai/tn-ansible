@@ -1,0 +1,45 @@
+---
+
+- hosts: all
+  gather_facts: yes
+
+  tasks:
+    - name: Do dist-upgrade
+      block:
+        - name: apt update && apt dist-upgrade
+          apt:
+            upgrade: dist
+            update_cache: true
+            cache_valid_time: 3600
+            autoremove: true
+            state: latest
+      when: ansible_facts.os_family == "Debian"
+    - name: Do yum update
+      block:
+        - name: yum update
+          yum:
+            name: "*"
+            state: latest
+      when: ansible_facts.distribution_file_variety == "RedHat"
+    - name: Install Python3 on Debianz
+      apt:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - python3
+        - debian-goodies
+        - wget
+      #when: ansible_facts.os_family == "Debian" 
+      when: ansible_facts.distribution_file_variety == "Debian"
+    - name: Install Python3 on RH variant
+      yum:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - python3
+        - yum-utils
+        - epel-release
+        - wget
+      #when: os_family == "Redhat" || os_family  == "Rocky"
+      when: ansible_facts.distribution_file_variety == "RedHat"
+

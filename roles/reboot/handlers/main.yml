@@ -1,0 +1,5 @@
+---
+
+- name: reboot
+  reboot:
+  when: need_reboot.rc == 1  || reboot_required_file.stat.exists == true

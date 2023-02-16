@@ -1,0 +1,27 @@
+---
+
+debian_packages:
+  - debian-goodies
+  - curl
+  - rsync
+  - vim
+  - wget
+  - needrestart
+  - dnsutils
+  - qemu-guest-agent
+  - bash-completion
+  - tar
+  - nload
+
+redhat_packages: 
+  - yum-utils
+  - curl
+  - rsync
+  - wget
+  - vim
+  - vim-enhanced
+  - bind-utils
+  - qemu-guest-agent
+  - bash-completion
+  - tar
+  - nload

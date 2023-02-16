@@ -1,0 +1,12 @@
+---
+
+- name: Update Cache (Debian)
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+    autoremove: true
+
+- name: Install default packages (Debian)
+  package:
+    name: "{{ debian_packages }}"
+    state: latest

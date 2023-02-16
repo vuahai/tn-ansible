@@ -1,0 +1,39 @@
+---
+
+#- include_tasks: "{{ ansible_distribution_file_variety|lower }}.yml"
+## the |lower will convert string to all lower case
+
+- name: check reboot for RedHatz
+  block:
+    - name: checking for reboot for RH
+      command: needs-restarting -r
+      failed_when: need_reboot.stderr != ""
+      ignore_errors: yes
+      register: need_reboot
+
+    - name: debug redhat
+      debug:
+        var: need_reboot.rc
+
+    - name: rebooting RH hosts that need reboot
+      reboot:
+      when: need_reboot.rc == 1
+
+  when: ansible_distribution_file_variety == "RedHat"
+
+- name: check reboot for Debianz
+  block:
+    - name: checking for reboot for Deb
+      stat:
+        path: /var/run/reboot-required
+      register: reboot_required_file
+
+    - name: debug Debian
+      debug:
+        var: reboot_required_file.stat.exists
+
+    - name: rebooting Deb hosts that need reboot
+      reboot:
+      when: reboot_required_file.stat.exists == true
+
+  when: ansible_distribution_file_variety == "Debian"
