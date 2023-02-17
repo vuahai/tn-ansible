@@ -11,3 +11,6 @@
       authorized_key:
         user: root
         key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
+
+    - name: install python 3
+      raw: dnf -y install python3
