@@ -5,12 +5,13 @@
   #  become: yes
   #  become_user: root
   #  become_method: sudo
+  gather_facts: false
 
   tasks:
+    - name: install python 3
+      raw: dnf -y install python3
+
     - name: Set up authorized_keys
       authorized_key:
         user: root
         key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
-
-    - name: install python 3
-      raw: dnf -y install python3

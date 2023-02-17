@@ -6,8 +6,10 @@
 k8s-cp1 ansible_host=192.168.100.121
 k8s-cp2 ansible_host=192.168.100.122
 
-[k8s-worker]
+[k8s-w]
 k8s-w1 ansible_host=192.168.100.131
+k8s-w2 ansible_host=192.168.100.132
+k8s-w3 ansible_host=192.168.100.133
 
 # Another way to use YAML
 #ubuntu2004_hosts:
