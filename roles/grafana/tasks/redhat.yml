@@ -1,0 +1,50 @@
+---
+
+- name: "Override Python Interpeter for CentOS7"
+  set_fact:
+    ansible_python_interpreter: "/usr/bin/python"
+  when:
+    - "ansible_distribution == 'CentOS'"
+    - "ansible_distribution_major_version | int == 7"
+
+- name: Install epel-release first
+  package:
+    name: epel-release
+    state: latest
+
+- name: Copy grafana.repo
+  copy:
+    src: grafana.repo
+    dest: /etc/yum.repos.d/grafana.repo
+  notify:
+    - Import grafana gpg key
+
+- name: Install Grafana
+  package:
+    name: grafana
+    state: latest
+
+- name: Check for Grafana Image Renderer
+  shell: grafana-cli plugins ls | grep grafana-image-renderer
+  register: renderer_output
+  ignore_errors: true
+
+    #- name: output Grafana Image Renderer
+    #  debug: 
+    #    var: renderer_output
+    #
+    #- name: output
+    #  debug:
+    #    msg: "NO"
+    #  when: renderer_output.failed == true
+ 
+- name: install Grafana Image Renderer
+  command: grafana-cli plugins install grafana-image-renderer
+  when: renderer_output.failed == true
+
+- name: Install required packages (RedHat)
+  package:
+    name: "{{ redhat_packages }}"
+    state: latest
+  notify:
+    - Update NSS
