@@ -1,0 +1,46 @@
+---
+
+- include_tasks: "{{ ansible_distribution_file_variety|lower }}.yml"
+## the |lower will convert string to all lower case
+#
+- name: Install pip packages
+  pip:
+    name: "{{ pip_packages }}"
+    state: latest
+
+- name: disable SELinux
+  selinux:
+    state: disabled
+
+- name: install whisper
+  command: "pip install --no-binary=:all: https://github.com/graphite-project/whisper/tarball/master"
+
+- name: install carbon
+  command: "pip install --no-binary=:all: https://github.com/graphite-project/carbon/tarball/master"
+
+- name: install graphite-web
+  command: "pip install --no-binary=:all: https://github.com/graphite-project/graphite-web/tarball/master"
+
+- name: Setting up Django SQLite Database
+  command: "django-admin.py migrate --settings=graphite.settings"
+  environment: 
+    PYTHONPATH: /opt/graphite/webapp
+
+- name: chown graphite.db
+  file:
+    path: /opt/graphite/storage/graphite.db
+    owner: apache
+    group: apache
+
+- name: set graphite.wsgi
+  copy:
+    src: graphite.wsgi.example
+    dest: /opt/graphite/conf/graphite.wsgi
+    mode: 0755
+
+- name: Set graphite vhost
+  copy:
+    src: graphite-vhost.conf.example
+    dest: /etc/httpd/conf.d/graphite-vhost.conf
+  notify:
+    - Restart apache

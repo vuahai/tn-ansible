@@ -1,0 +1,43 @@
+# /etc/httpd/conf.d/graphite-vhost.conf
+
+LoadModule wsgi_module "/usr/lib64/httpd/modules/mod_wsgi-py39.cpython-39-x86_64-linux-gnu.so"
+
+WSGISocketPrefix /var/run/wsgi
+
+#Listen 80
+<VirtualHost *:80>
+
+    ServerName graphite
+    DocumentRoot "/opt/graphite/webapp"
+    ErrorLog /opt/graphite/storage/log/webapp/error.log
+    CustomLog /opt/graphite/storage/log/webapp/access.log common
+
+    WSGIDaemonProcess graphite-web processes=5 threads=5 display-name='%{GROUP}' inactivity-timeout=120
+    WSGIProcessGroup graphite-web
+    WSGIApplicationGroup %{GLOBAL}
+    WSGIImportScript /opt/graphite/conf/graphite.wsgi process-group=graphite-web application-group=%{GLOBAL}
+
+    WSGIScriptAlias / /opt/graphite/conf/graphite.wsgi
+
+    Alias /static/ /opt/graphite/webapp/content/;
+
+    <Directory /opt/graphite/webapp/content/>
+            <IfVersion < 2.4>
+                    Order deny,allow
+                    Allow from all
+            </IfVersion>
+            <IfVersion >= 2.4>
+                    Require all granted
+            </IfVersion>
+    </Directory>
+
+    <Directory /opt/graphite/conf/>
+            <IfVersion < 2.4>
+                    Order deny,allow
+                    Allow from all
+            </IfVersion>
+            <IfVersion >= 2.4>
+                    Require all granted
+            </IfVersion>
+    </Directory>
+</VirtualHost>

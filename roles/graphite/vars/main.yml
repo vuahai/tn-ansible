@@ -1,0 +1,31 @@
+---
+
+debian_packages:
+  - gcc
+  - python-dev
+  - libcairo2-dev
+  - libffi-dev
+  - build-essential
+  - fontconfig
+  - apache2
+  - apache2-dev
+
+redhat_packages: 
+  - gcc
+  - python-devel
+  - cairo-devel
+  - libffi-devel
+  - fontconfig
+  - httpd
+  - httpd-devel
+
+pip_packages:
+  - cairocffi
+  - Django
+  - django-tagging
+  - pytz
+  - scandir
+  - mod-wsgi
+
+environment:
+  PYTHONPATH: /opt/graphite/lib/:/opt/graphite/webapp/

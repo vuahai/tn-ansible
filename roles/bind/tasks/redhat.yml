@@ -1,0 +1,16 @@
+---
+
+- name: "Override Python Interpeter for CentOS7"
+  set_fact:
+    ansible_python_interpreter: "/usr/bin/python"
+  when:
+    - "ansible_distribution == 'CentOS'"
+    - "ansible_distribution_major_version | int == 7"
+
+- name: Install default packages (RedHat)
+  package:
+    name: 
+      - bind
+      - bind-utils
+    state: latest
+

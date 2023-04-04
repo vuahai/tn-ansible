@@ -1,0 +1,10 @@
+---
+
+- hosts: all
+  tasks:
+    - name: Install Podman
+      package:
+        name: 
+          - podman
+          - podman-compose
+        state: latest 
